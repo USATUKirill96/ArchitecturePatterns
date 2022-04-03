@@ -23,7 +23,7 @@ repos:
 
       - id: flake8
         name: flake8
-        entry: .venv/bin/flake8
+        entry: venv/bin/flake8
         language: python
         types: [python]
         args: []
@@ -32,7 +32,7 @@ repos:
 
       - id: pylint
         name: pylint
-        entry: .venv/bin/pylint
+        entry: venv/bin/pylint
         language: python
         types: [python]
         args: []

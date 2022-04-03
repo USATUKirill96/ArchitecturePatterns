@@ -1,4 +1,3 @@
 .idea/
-venv/
-*.pyc
-.pytest_cache/
+.history/
+.vscode/

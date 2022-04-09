@@ -1,0 +1,16 @@
+CREATE TABLE batch (
+  id SERIAL PRIMARY KEY,
+  reference VARCHAR(100) NOT NULL,
+  sku VARCHAR(100) NOT NULL,
+  eta TIMESTAMP,
+  purchased_quantity INTEGER NOT NULL
+);
+
+CREATE TABLE order_line (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER NOT NULL,
+  sku VARCHAR(100) NOT NULL,
+  quantity INTEGER NOT NULL,
+  batch_id INTEGER NOT NULL,
+  CONSTRAINT fk_batch FOREIGN KEY(batch_id) REFERENCES batch(id) ON DELETE CASCADE
+);

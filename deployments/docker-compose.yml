@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: kek
+      POSTGRES_USER: lol
+      POSTGRES_DB: batches
+    ports:
+    - "4001:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DESIGN='nette'
+    ports: 
+    - "4002:8080"

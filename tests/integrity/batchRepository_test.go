@@ -1,10 +1,11 @@
 package integrity
 
 import (
-	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
-	"USATUKirill96/AcrhitecturePatterns/tests"
 	"testing"
 	"time"
+
+	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
+	"USATUKirill96/AcrhitecturePatterns/tests"
 )
 
 func TestBatchesRepositoryCanGetBatch(t *testing.T) {
@@ -38,12 +39,14 @@ func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 	id, err := testCase.Container.Batches.Insert(batch)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	createdBatch, err := testCase.Container.Batches.Get(id)
 
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	expected := expectedType{reference: reference, sku: sku, eta: eta, availableQuantity: purchasedAuantity}
 
@@ -68,12 +71,14 @@ func TestBatchRepositoryCanUpdateBatch(t *testing.T) {
 	err := testCase.Container.Batches.Update(batch)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	updatedBatch, err := testCase.Container.Batches.Get(batch.ID)
 
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	expected := expectedType{reference: reference, sku: sku, eta: eta, availableQuantity: purchasedAuantity}

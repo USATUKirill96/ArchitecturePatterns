@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -57,6 +58,6 @@ func (tc TestCase) delete() {
 	`
 	_, err := tc.DB.Exec(stmt)
 	if err != nil {
-		panic(err)
+		fmt.Print(err)
 	}
 }

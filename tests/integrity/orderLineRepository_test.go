@@ -46,12 +46,14 @@ func TestOrderLineRepositoryInsert(t *testing.T) {
 	id, err := testCase.Container.OrderLines.Insert(&orderLine)
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
+		return
 	}
 
 	savedOrderLine, err := testCase.Container.OrderLines.Get(id)
 
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
+		return
 	}
 	expected.ID = id
 	assertOrderLine(savedOrderLine, expected, t)
@@ -73,7 +75,8 @@ func TestOrderLineRepositoryUpdate(t *testing.T) {
 
 	orderLine, err := testCase.Container.OrderLines.Get(1)
 	if err != nil {
-		panic(err)
+		t.Errorf(err.Error())
+		return
 	}
 
 	orderLine.OrderID = expected.OrderID
@@ -85,13 +88,16 @@ func TestOrderLineRepositoryUpdate(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
+		return
 	}
 
 	savedOrderLine, err := testCase.Container.OrderLines.Get(1)
 
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
+		return
 	}
+
 	expected.ID = savedOrderLine.ID
 	assertOrderLine(savedOrderLine, expected, t)
 }

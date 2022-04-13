@@ -25,3 +25,8 @@ services-up:
 services-down: 
 	docker-compose -f deployments/docker-compose.yml down
 
+test-services-up:
+	docker-compose -f deployments/docker-compose.yml up -d tests
+
+test-coverage:
+	go test -v ./... -coverprofile coverage.out -coverpkg ./... ./... &&  go tool cover -func coverage.out > coverage.txt && rm coverage.out

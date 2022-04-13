@@ -14,7 +14,7 @@ jobs:
         go-version: 1.18
 
     - name: Run containers
-      run: make services-up
+      run: make test-services-up
 
     - name: Build
       run: go build -v ./...

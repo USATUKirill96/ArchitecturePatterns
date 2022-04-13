@@ -7,7 +7,7 @@ import (
 
 func makeBatchAndLine(sku string, batchQuantity, lineQuantity int) (*Batch, OrderLine) {
 	batch := NewBatch("batch-001", sku, time.Now(), batchQuantity)
-	line := NewOrderLine("order-123", sku, lineQuantity)
+	line := NewOrderLine("order-123", sku, lineQuantity, 0)
 
 	return batch, line
 }
@@ -49,7 +49,7 @@ func TestCanAllocate(t *testing.T) {
 
 func TestCannotAllocateIfSQUsDoNotMatch(t *testing.T) {
 	batch := NewBatch("batch-001", "CHAIT", time.Time{}, 100)
-	line := NewOrderLine("order-123", "TOASTER", 10)
+	line := NewOrderLine("order-123", "TOASTER", 10, 0)
 	if batch.CanAllocate(line) != false {
 		t.Error("Expected False, got True")
 	}

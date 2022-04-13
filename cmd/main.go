@@ -17,7 +17,14 @@ func main() {
 				Name:      "migrate",
 				Usage:     "Control the migration flow of the project",
 				ArgsUsage: "\n - up - migrating all the way up; \n - drop - dropping the databse; \n - <int> - migrating to selected version.",
-				Action:    applyMigrations,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  "environment",
+						Value: "prod",
+						Usage: "Set `prod` - production or `test` - test environment",
+					},
+				},
+				Action: applyMigrations,
 			},
 			{
 				Name:      "runserver",

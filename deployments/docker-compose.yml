@@ -1,5 +1,16 @@
 version: '3'
 services:
+
+  prod:
+    image: alpine:latest
+    depends_on:
+      - db
+      - adminer
+  tests:
+    image: alpine:latest
+    depends_on:
+      - db_test
+
   db:
     image: postgres
     restart: always
@@ -9,6 +20,16 @@ services:
       POSTGRES_DB: batches
     ports:
     - "4001:5432"
+
+  db_test:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: kek
+      POSTGRES_USER: lol
+      POSTGRES_DB: batches
+    ports:
+    - "4003:5432"
 
   adminer:
     image: adminer

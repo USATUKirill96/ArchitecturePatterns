@@ -75,9 +75,9 @@ func (r *BatchRepository) Insert(batch *Batch) (int, error) {
 	RETURNING id
 	`
 	var id int
-	err := r.db.QueryRow(stmt, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
+	err := r.db.QueryRow(stmt, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity).Scan(&id)
 	if err != nil {
-		return 0, err.Err()
+		return 0, err
 	}
 
 	return int(id), nil
@@ -89,7 +89,8 @@ func (r *BatchRepository) Update(batch *Batch) error {
 	   SET reference = $2, sku = $3, eta = $4, purchased_quantity = $5 
 	 WHERE id = $1
 	`
-	_, err := r.db.Exec(stmt, batch.ID, batch.SKU, batch.ETA, batch.purchasedQuantity)
+	_, err := r.db.Exec(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
+
 	if err != nil {
 		return err
 	}

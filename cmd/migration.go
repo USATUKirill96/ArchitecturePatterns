@@ -20,7 +20,17 @@ func applyMigrations(c *cli.Context) error {
 		return dotenvErr
 	}
 
-	postgresUrl := fmt.Sprintf("%s?sslmode=disable", os.Getenv("DATABASE_URL"))
+	var postgresUrl string
+	if c.String("environment") == "prod" {
+		fmt.Println("migrating prod")
+		postgresUrl = fmt.Sprintf("%s?sslmode=disable", os.Getenv("DATABASE_URL"))
+	} else if c.String("environment") == "test" {
+		postgresUrl = fmt.Sprintf("%s?sslmode=disable", os.Getenv("DATABASE_TEST_URL"))
+	} else {
+		fmt.Println(c.String("environment"))
+		panic("arguments: Incorrect environment value. `prod` and `test` available")
+	}
+
 	m, err := migrate.New("file://migrations", postgresUrl)
 	if err != nil {
 		return dotenvErr

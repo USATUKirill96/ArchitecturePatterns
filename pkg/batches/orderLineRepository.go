@@ -31,9 +31,24 @@ func (r *OrderLineRepository) Insert(line *OrderLine) (int, error) {
 
 	var id int
 
-	err := r.db.QueryRow(stmt, line.OrderID, line.SKU, line.Quantity, line.BatchID)
+	err := r.db.QueryRow(stmt, line.OrderID, line.SKU, line.Quantity, line.BatchID).Scan(&id)
 	if err != nil {
-		return 0, err.Err()
+		return 0, err
 	}
 	return int(id), nil
+}
+
+func (r *OrderLineRepository) Update(line *OrderLine) error {
+	stmt := `
+	UPDATE order_line
+	   SET order_id = $2, sku = $3, quantity = $4, batch_id = $5
+	 WHERE id = $1 
+
+	`
+
+	_, err := r.db.Exec(stmt, line.ID, line.OrderID, line.SKU, line.Quantity, line.BatchID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

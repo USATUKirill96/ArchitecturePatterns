@@ -4,10 +4,10 @@ import (
 	"testing"
 )
 
-func (tc TestCase) Setup(tb testing.TB) func(tb testing.TB) {
+func (tc TestCase) Setup(tb testing.TB) func() {
 	tc.createBatches()
 	tc.createOrderLines()
-	return func(tb testing.TB) {
+	return func() {
 		tc.delete()
 	}
 }

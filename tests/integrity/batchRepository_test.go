@@ -11,7 +11,7 @@ import (
 func TestBatchesRepositoryCanGetBatch(t *testing.T) {
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
 	batch, err := testCase.Container.Batches.Get(1)
 	if err != nil {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
@@ -27,7 +27,7 @@ func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
 
 	reference := "Test-batch-created"
 	sku := "tested-good"
@@ -57,7 +57,7 @@ func TestBatchRepositoryCanUpdateBatch(t *testing.T) {
 
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
 
 	reference := "Test-batch-created"
 	sku := "tested-good"

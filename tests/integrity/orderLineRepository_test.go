@@ -18,7 +18,8 @@ type orderLineExpected struct {
 func TestOrderLineRepositoryGet(t *testing.T) {
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
+
 	orderLine, err := testCase.Container.OrderLines.Get(1)
 	if err != nil {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
@@ -32,7 +33,7 @@ func TestOrderLineRepositoryGet(t *testing.T) {
 func TestOrderLineRepositoryInsert(t *testing.T) {
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",
@@ -64,7 +65,7 @@ func TestOrderLineRepositoryUpdate(t *testing.T) {
 
 	testCase := tests.NewTestCase()
 	teardown := testCase.Setup(t)
-	defer teardown(t)
+	t.Cleanup(teardown)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",

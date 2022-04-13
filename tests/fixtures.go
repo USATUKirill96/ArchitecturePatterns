@@ -51,7 +51,7 @@ func (tc TestCase) createOrderLines() {
 	}
 }
 
-func (tc TestCase) delete() {
+func (tc TestCase) Delete() {
 
 	stmt := `
 	DELETE FROM batch order_line 

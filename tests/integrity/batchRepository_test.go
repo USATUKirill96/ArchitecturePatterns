@@ -26,8 +26,7 @@ func TestBatchesRepositoryCanGetBatch(t *testing.T) {
 func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	t.Cleanup(testCase.Delete)
 
 	reference := "Test-batch-created"
 	sku := "tested-good"

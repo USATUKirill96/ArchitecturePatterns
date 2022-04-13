@@ -8,6 +8,6 @@ func (tc TestCase) Setup(tb testing.TB) func() {
 	tc.createBatches()
 	tc.createOrderLines()
 	return func() {
-		tc.delete()
+		tc.Delete()
 	}
 }

@@ -4,20 +4,20 @@ runserver:
 test:
 	go test -v ./...
 
-migrate_up:
+migrate-up:
 	go run ./cmd/* migrate up
 
-migrate_up_tests:
-	go run ./cmd/* migrate--environment=test up
+migrate-up-tests:
+	go run ./cmd/* migrate --environment=test up
 
-migrate_drop:
+migrate-drop:
 	go run ./cmd/* migrate drop
 
-migrate_drop_tests:
-	go run ./cmd/* migrate -environment=test drop
+migrate-drop-tests:
+	go run ./cmd/* migrate --environment=test drop
 
 services-up: 
-	docker-compose -f deployments/docker-compose.yml up
+	docker-compose -f deployments/docker-compose.yml up -d
 
 services-down: 
 	docker-compose -f deployments/docker-compose.yml down

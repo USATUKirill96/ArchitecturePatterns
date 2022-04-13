@@ -13,8 +13,14 @@ jobs:
       with:
         go-version: 1.18
 
+    - name: Run containers
+      run: make services-up
+
+    - name: Set up migrations
+      run: make migrate-up-tests
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: make test

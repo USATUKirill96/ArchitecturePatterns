@@ -4,6 +4,9 @@ runserver:
 test:
 	go test -v ./...
 
+test-sequentially:
+	go test -v ./... -p 1
+
 migrate-up:
 	go run ./cmd/* migrate up
 

@@ -16,11 +16,11 @@ jobs:
     - name: Run containers
       run: make services-up
 
-    - name: Set up migrations
-      run: make migrate-up-tests
-
     - name: Build
       run: go build -v ./...
 
+    - name: Set up migrations
+      run: make migrate-up-tests
+
     - name: Test
-      run: make test
+      run: make test-sequentially

@@ -32,8 +32,8 @@ func TestOrderLineRepositoryGet(t *testing.T) {
 
 func TestOrderLineRepositoryInsert(t *testing.T) {
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	testCase.CreateBatches()
+	t.Cleanup(testCase.Delete)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",

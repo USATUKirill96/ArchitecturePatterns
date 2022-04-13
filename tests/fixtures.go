@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func (tc TestCase) createBatches() {
+func (tc TestCase) CreateBatches() {
 	stmt := `
 	   INSERT INTO batch (id, reference, sku, eta, purchased_quantity) 
 	   VALUES ($1, $2, $3, $4, $5) 
@@ -24,11 +24,11 @@ func (tc TestCase) createBatches() {
 	}
 
 	for _, batch := range batches {
-		tc.DB.QueryRow(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
+		tc.DB.Exec(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
 	}
 }
 
-func (tc TestCase) createOrderLines() {
+func (tc TestCase) CreateOrderLines() {
 	stmt := `
 	   INSERT INTO order_line (id, order_id, sku, quantity, batch_id) 
 	   VALUES ($1, $2, $3, $4, $5) 
@@ -47,7 +47,7 @@ func (tc TestCase) createOrderLines() {
 	}
 
 	for _, orderLine := range orderLines {
-		tc.DB.QueryRow(stmt, orderLine.ID, orderLine.OrderID, orderLine.SKU, orderLine.Quantity, orderLine.batchID)
+		tc.DB.Exec(stmt, orderLine.ID, orderLine.OrderID, orderLine.SKU, orderLine.Quantity, orderLine.batchID)
 	}
 }
 
@@ -56,8 +56,8 @@ func (tc TestCase) Delete() {
 	stmt := `
 	DELETE FROM batch order_line 
 	`
-	err := tc.DB.QueryRow(stmt)
-	if err.Err() != nil {
-		fmt.Print("Ошибка при очистке базы", err.Err())
+	_, err := tc.DB.Exec(stmt)
+	if err != nil {
+		fmt.Print("Ошибка при очистке базы", err)
 	}
 }

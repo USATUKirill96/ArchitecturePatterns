@@ -5,8 +5,8 @@ import (
 )
 
 func (tc TestCase) Setup(tb testing.TB) func() {
-	tc.createBatches()
-	tc.createOrderLines()
+	tc.CreateBatches()
+	tc.CreateOrderLines()
 	return func() {
 		tc.Delete()
 	}

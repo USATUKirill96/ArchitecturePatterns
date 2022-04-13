@@ -46,9 +46,9 @@ func (r *OrderLineRepository) Update(line *OrderLine) error {
 
 	`
 
-	_, err := r.db.Exec(stmt, line.ID, line.OrderID, line.SKU, line.Quantity, line.BatchID)
+	err := r.db.QueryRow(stmt, line.ID, line.OrderID, line.SKU, line.Quantity, line.BatchID)
 	if err != nil {
-		return err
+		return err.Err()
 	}
 	return nil
 }

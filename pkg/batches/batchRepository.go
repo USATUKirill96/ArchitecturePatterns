@@ -65,6 +65,7 @@ func (r *BatchRepository) LoadAllocations(batch *Batch) error {
 	}
 
 	batch.allocations = orderLines
+
 	return nil
 }
 
@@ -89,10 +90,10 @@ func (r *BatchRepository) Update(batch *Batch) error {
 	   SET reference = $2, sku = $3, eta = $4, purchased_quantity = $5 
 	 WHERE id = $1
 	`
-	_, err := r.db.Exec(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
+	err := r.db.QueryRow(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
 
 	if err != nil {
-		return err
+		return err.Err()
 	}
 	return nil
 }

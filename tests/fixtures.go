@@ -24,7 +24,7 @@ func (tc TestCase) createBatches() {
 	}
 
 	for _, batch := range batches {
-		tc.DB.Exec(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
+		tc.DB.QueryRow(stmt, batch.ID, batch.Reference, batch.SKU, batch.ETA, batch.purchasedQuantity)
 	}
 }
 
@@ -47,7 +47,7 @@ func (tc TestCase) createOrderLines() {
 	}
 
 	for _, orderLine := range orderLines {
-		tc.DB.Exec(stmt, orderLine.ID, orderLine.OrderID, orderLine.SKU, orderLine.Quantity, orderLine.batchID)
+		tc.DB.QueryRow(stmt, orderLine.ID, orderLine.OrderID, orderLine.SKU, orderLine.Quantity, orderLine.batchID)
 	}
 }
 
@@ -56,8 +56,8 @@ func (tc TestCase) delete() {
 	stmt := `
 	DELETE FROM batch order_line 
 	`
-	_, err := tc.DB.Exec(stmt)
-	if err != nil {
-		fmt.Print(err)
+	err := tc.DB.QueryRow(stmt)
+	if err.Err() != nil {
+		fmt.Print("Ошибка при очистке базы", err.Err())
 	}
 }

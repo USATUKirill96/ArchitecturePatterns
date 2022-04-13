@@ -17,7 +17,7 @@ func TestBatchesRepositoryCanGetBatch(t *testing.T) {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
 	}
 
-	expected := expectedType{"test-batch-1", "table", time.Time{}, 10}
+	expected := expectedType{reference: "test-batch-1", sku: "table", eta: time.Time{}, availableQuantity: 10}
 
 	assertBatch(batch, expected, t)
 

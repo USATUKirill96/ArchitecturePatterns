@@ -46,7 +46,9 @@ func (b *Batch) AllocatedQuantity() int {
 }
 
 func (b *Batch) AvailableQuantity() int {
-	return b.purchasedQuantity - b.AllocatedQuantity()
+	purchased := b.purchasedQuantity
+	allocated := b.AllocatedQuantity()
+	return purchased - allocated
 }
 
 type Allocations []OrderLine

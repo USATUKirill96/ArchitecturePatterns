@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/urfave/cli/v2"
+
 	"USATUKirill96/AcrhitecturePatterns/internal"
 	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
 	"USATUKirill96/AcrhitecturePatterns/utils"
-
-	"github.com/gorilla/mux"
-	"github.com/urfave/cli/v2"
 )
 
 func runserver(c *cli.Context) error {
@@ -31,7 +31,7 @@ func runserver(c *cli.Context) error {
 
 	r := mux.NewRouter()
 
-	r.Handle("/", internal.BatchHandler{Container: container})
+	r.Handle("/", internal.AllocationHandler{Container: container})
 
 	http.Handle("/", r)
 

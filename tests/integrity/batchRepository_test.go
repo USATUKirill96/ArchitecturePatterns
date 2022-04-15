@@ -10,8 +10,10 @@ import (
 
 func TestBatchesRepositoryCanGetBatch(t *testing.T) {
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	testCase.CreateBatches()
+	testCase.CreateOrderLines()
+	t.Cleanup(testCase.Delete)
+
 	batch, err := testCase.Container.Batches.Get(1)
 	if err != nil {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
@@ -52,11 +54,39 @@ func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 	assertBatch(createdBatch, expected, t)
 }
 
+func TestBatchRepositoryFilterBySQU(t *testing.T) {
+	testCase := tests.NewTestCase()
+	testCase.CreateBatches()
+	testCase.CreateOrderLines()
+	t.Cleanup(testCase.Delete)
+
+	batches, err := testCase.Container.Batches.FliterBySKU("lamp")
+	if err != nil {
+		t.Error(err)
+	}
+	if len(batches) != 1 {
+		t.Errorf("Unexpected quantity of items. Expected: %v, got: %v", 1, len(batches))
+	}
+
+	batch, _ := testCase.Container.Batches.Get(3)
+	batch.SKU = "lamp"
+	testCase.Container.Batches.Update(batch)
+
+	batches, err = testCase.Container.Batches.FliterBySKU("lamp")
+	if err != nil {
+		t.Error(err)
+	}
+	if len(batches) != 2 {
+		t.Errorf("Unexpected quantity of items. Expected: %v, got: %v", 1, len(batches))
+	}
+}
+
 func TestBatchRepositoryCanUpdateBatch(t *testing.T) {
 
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	testCase.CreateBatches()
+	testCase.CreateOrderLines()
+	t.Cleanup(testCase.Delete)
 
 	reference := "Test-batch-created"
 	sku := "tested-good"

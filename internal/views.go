@@ -1,41 +1,40 @@
 package internal
 
 import (
-	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
-	"USATUKirill96/AcrhitecturePatterns/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
+
+	"USATUKirill96/AcrhitecturePatterns/utils"
 )
 
-type BatchHandler struct {
+type AllocationHandler struct {
 	Container *utils.Container
 }
 
-func (bh BatchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		w.WriteHeader(http.StatusCreated)
-		w.Header().Set("Content-Type", "application/json")
+func (ah AllocationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// if r.Method == "GET" {
+	// 	w.WriteHeader(http.StatusCreated)
+	// 	w.Header().Set("Content-Type", "application/json")
 
-		batch, err := bh.Container.Batches.Get(1)
-		if err != nil {
-			fmt.Println(err)
-		}
-		jsonResp, err := json.Marshal(batch)
-		if err != nil {
-			fmt.Printf("Error happened in JSON marshal. Err: %s", err)
-		}
-		w.Write(jsonResp)
-		return
-	}
+	// 	batch, err := ah.Container.Batches.Get(1)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	jsonResp, err := json.Marshal(batch)
+	// 	if err != nil {
+	// 		fmt.Printf("Error happened in JSON marshal. Err: %s", err)
+	// 	}
+	// 	w.Write(jsonResp)
+	// 	return
+	// }
 
 	if r.Method == "POST" {
 
 		var input struct {
-			Reference         string `json: "reference"`
-			SKU               string `json: "SKU"`
-			PurchasedQuantity int    `json: "purchasedQuantity"`
+			OrderID  string `json: "orderid"`
+			SKU      string `json: "sku"`
+			Quantity int    `json: "quantity"`
 		}
 
 		w.WriteHeader(http.StatusCreated)
@@ -50,17 +49,13 @@ func (bh BatchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		err = json.NewDecoder(r.Body).Decode(&input)
 		if err != nil {
 			fmt.Println(err)
+
+			jsonResp, err := json.Marshal(map[string]int{"id": 1})
+			if err != nil {
+				fmt.Println(err)
+			}
+			w.Write(jsonResp)
+			return
 		}
-		b := batches.NewBatch(input.Reference, input.SKU, time.Now(), input.PurchasedQuantity)
-		id, err := bh.Container.Batches.Insert(b)
-		if err != nil {
-			fmt.Println(err)
-		}
-		jsonResp, err := json.Marshal(map[string]int{"id": id})
-		if err != nil {
-			fmt.Println(err)
-		}
-		w.Write(jsonResp)
-		return
 	}
 }

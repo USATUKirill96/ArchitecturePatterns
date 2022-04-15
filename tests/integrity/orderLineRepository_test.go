@@ -17,8 +17,9 @@ type orderLineExpected struct {
 
 func TestOrderLineRepositoryGet(t *testing.T) {
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	testCase.CreateBatches()
+	testCase.CreateOrderLines()
+	t.Cleanup(testCase.Delete)
 
 	orderLine, err := testCase.Container.OrderLines.Get(1)
 	if err != nil {
@@ -64,8 +65,9 @@ func TestOrderLineRepositoryInsert(t *testing.T) {
 func TestOrderLineRepositoryUpdate(t *testing.T) {
 
 	testCase := tests.NewTestCase()
-	teardown := testCase.Setup(t)
-	t.Cleanup(teardown)
+	testCase.CreateBatches()
+	testCase.CreateOrderLines()
+	t.Cleanup(testCase.Delete)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",

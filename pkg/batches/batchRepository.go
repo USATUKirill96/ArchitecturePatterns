@@ -36,6 +36,43 @@ func (r *BatchRepository) Get(id int) (*Batch, error) {
 	return batch, nil
 }
 
+func (r *BatchRepository) FliterBySKU(sku string) ([]*Batch, error) {
+
+	stmt := `
+	SELECT id, reference, sku, eta, purchased_quantity
+	  FROM batch
+	 WHERE sku = $1
+	`
+
+	rows, err := r.db.Query(stmt, sku)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	batches := []*Batch{}
+
+	for rows.Next() {
+		b := &Batch{}
+		err = rows.Scan(&b.ID, &b.Reference, &b.SKU, &b.ETA, &b.purchasedQuantity)
+		if err != nil {
+			return nil, err
+		}
+		batches = append(batches, b)
+	}
+
+	// TODO: filter all allocations by batch ids and attach manually instead of creating request for each batch
+	for _, batch := range batches {
+		err := r.LoadAllocations(batch)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return batches, nil
+
+}
+
 func (r *BatchRepository) LoadAllocations(batch *Batch) error {
 
 	stmt := `

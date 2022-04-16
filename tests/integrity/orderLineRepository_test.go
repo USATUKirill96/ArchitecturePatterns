@@ -8,7 +8,6 @@ import (
 )
 
 type orderLineExpected struct {
-	ID       int
 	OrderID  string
 	SKU      string
 	Quantity int
@@ -16,36 +15,36 @@ type orderLineExpected struct {
 }
 
 func TestOrderLineRepositoryGet(t *testing.T) {
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
-	testCase.CreateOrderLines()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
+	orderLineFixtures := testCase.CreateOrderLines(batchFixtures)
 	t.Cleanup(testCase.Delete)
 
-	orderLine, err := testCase.Container.OrderLines.Get(1)
+	orderLine, err := testCase.Container.OrderLines.Get(orderLineFixtures[0].ID)
 	if err != nil {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
 	}
 
-	expected := orderLineExpected{1, "1", "lamp", 3, 2}
+	expected := orderLineExpected{"1", "lamp", 3, batchFixtures[1].ID}
 
 	assertOrderLine(orderLine, expected, t)
 }
 
 func TestOrderLineRepositoryInsert(t *testing.T) {
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
 	t.Cleanup(testCase.Delete)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",
 		SKU:      "lamp",
 		Quantity: 5,
-		BatchID:  2,
+		BatchID:  batchFixtures[1].ID,
 	}
 
 	orderLine := batches.NewOrderLine(expected.OrderID, expected.SKU, expected.Quantity, expected.BatchID)
 
-	id, err := testCase.Container.OrderLines.Insert(&orderLine)
+	id, err := testCase.Container.OrderLines.Insert(orderLine)
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
 		return
@@ -57,59 +56,49 @@ func TestOrderLineRepositoryInsert(t *testing.T) {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
 		return
 	}
-	expected.ID = id
 	assertOrderLine(savedOrderLine, expected, t)
 
 }
 
 func TestOrderLineRepositoryUpdate(t *testing.T) {
 
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
-	testCase.CreateOrderLines()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
+	orderLineFixtures := testCase.CreateOrderLines(batchFixtures)
 	t.Cleanup(testCase.Delete)
 
 	expected := orderLineExpected{
 		OrderID:  "4444",
 		SKU:      "lamp",
 		Quantity: 5,
-		BatchID:  3,
+		BatchID:  batchFixtures[2].ID,
 	}
 
-	orderLine, err := testCase.Container.OrderLines.Get(1)
-	if err != nil {
-		t.Errorf(err.Error())
-		return
-	}
+	orderLine := orderLineFixtures[0]
 
 	orderLine.OrderID = expected.OrderID
 	orderLine.SKU = expected.SKU
 	orderLine.Quantity = expected.Quantity
 	orderLine.BatchID = expected.BatchID
 
-	err = testCase.Container.OrderLines.Update(orderLine)
+	err := testCase.Container.OrderLines.Update(orderLine)
 
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
 		return
 	}
 
-	savedOrderLine, err := testCase.Container.OrderLines.Get(1)
+	savedOrderLine, err := testCase.Container.OrderLines.Get(orderLine.ID)
 
 	if err != nil {
 		t.Errorf("Error in TestOrderLineRepository: %v", err)
 		return
 	}
 
-	expected.ID = savedOrderLine.ID
 	assertOrderLine(savedOrderLine, expected, t)
 }
 
 func assertOrderLine(ol *batches.OrderLine, expected orderLineExpected, t *testing.T) {
-	if ol.ID != expected.ID {
-		t.Errorf("OrderLine ID doesn't match. Expected: %v, got: %v", expected.ID, ol.ID)
-	}
-
 	if ol.OrderID != expected.OrderID {
 		t.Errorf("OrderLine OrderID doesn't match. Expected: %v, got: %v", expected.OrderID, ol.OrderID)
 	}

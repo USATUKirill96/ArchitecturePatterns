@@ -8,6 +8,6 @@ type OrderLine struct {
 	BatchID  int
 }
 
-func NewOrderLine(orderID, sku string, quantity int, batchID int) OrderLine {
-	return OrderLine{OrderID: orderID, SKU: sku, Quantity: quantity, BatchID: batchID}
+func NewOrderLine(orderID, sku string, quantity int, batchID int) *OrderLine {
+	return &OrderLine{OrderID: orderID, SKU: sku, Quantity: quantity, BatchID: batchID}
 }

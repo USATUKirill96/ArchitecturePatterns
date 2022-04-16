@@ -1,21 +1,22 @@
 package tests
 
 import (
-	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
-	"USATUKirill96/AcrhitecturePatterns/utils"
 	"database/sql"
 	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
+
+	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
+	"USATUKirill96/AcrhitecturePatterns/utils"
 )
 
 type TestCase struct {
-	DB        *sql.DB
+	db        *sql.DB
 	Container *utils.Container
 }
 
-func NewTestCase() TestCase {
+func NewIntegrityTestCase() TestCase {
 
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -36,7 +37,17 @@ func NewTestCase() TestCase {
 		OrderLines: orderLineRepository,
 	}
 	return TestCase{
-		DB:        db,
+		db:        db,
 		Container: container,
 	}
+}
+
+func NewFakeTestCase() TestCase {
+	batchRepository := &FakeBatchRepository{}
+	orderLineRepository := &FakeOrderLineRepository{}
+	container := &utils.Container{
+		Batches:    batchRepository,
+		OrderLines: orderLineRepository,
+	}
+	return TestCase{Container: container}
 }

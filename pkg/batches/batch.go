@@ -18,14 +18,14 @@ func NewBatch(reference, sku string, eta time.Time, purchasedQuantity int) *Batc
 	return &Batch{Reference: reference, SKU: sku, ETA: eta, purchasedQuantity: purchasedQuantity}
 }
 
-func (b *Batch) Allocate(line OrderLine) {
+func (b *Batch) Allocate(line *OrderLine) {
 	idx := b.allocations.getIdx(line)
 	if idx == -1 {
 		b.allocations = append(b.allocations, line)
 	}
 }
 
-func (b *Batch) Deallocate(line OrderLine) {
+func (b *Batch) Deallocate(line *OrderLine) {
 	idx := b.allocations.getIdx(line)
 	if idx != -1 {
 		b.allocations.remove(idx)
@@ -33,7 +33,7 @@ func (b *Batch) Deallocate(line OrderLine) {
 
 }
 
-func (b *Batch) CanAllocate(line OrderLine) bool {
+func (b *Batch) CanAllocate(line *OrderLine) bool {
 	return line.SKU == b.SKU && b.AvailableQuantity() >= line.Quantity
 }
 
@@ -51,9 +51,9 @@ func (b *Batch) AvailableQuantity() int {
 	return purchased - allocated
 }
 
-type Allocations []OrderLine
+type Allocations []*OrderLine
 
-func (a Allocations) getIdx(line OrderLine) int {
+func (a Allocations) getIdx(line *OrderLine) int {
 	for i, allocation := range a {
 		if allocation == line {
 			return i

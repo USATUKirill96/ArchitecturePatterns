@@ -9,12 +9,14 @@ import (
 )
 
 func TestBatchesRepositoryCanGetBatch(t *testing.T) {
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
-	testCase.CreateOrderLines()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
+	testCase.CreateOrderLines(batchFixtures)
 	t.Cleanup(testCase.Delete)
 
-	batch, err := testCase.Container.Batches.Get(1)
+	firstBatch := batchFixtures[0]
+
+	batch, err := testCase.Container.Batches.Get(firstBatch.ID)
 	if err != nil {
 		t.Errorf("Error in TestBatchesRepository: %v", err)
 	}
@@ -27,7 +29,7 @@ func TestBatchesRepositoryCanGetBatch(t *testing.T) {
 
 func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 
-	testCase := tests.NewTestCase()
+	testCase := tests.NewIntegrityTestCase()
 	t.Cleanup(testCase.Delete)
 
 	reference := "Test-batch-created"
@@ -55,9 +57,9 @@ func TestBatchesRepositoryCanCreateBatch(t *testing.T) {
 }
 
 func TestBatchRepositoryFilterBySQU(t *testing.T) {
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
-	testCase.CreateOrderLines()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
+	testCase.CreateOrderLines(batchFixtures)
 	t.Cleanup(testCase.Delete)
 
 	batches, err := testCase.Container.Batches.FliterBySKU("lamp")
@@ -68,34 +70,31 @@ func TestBatchRepositoryFilterBySQU(t *testing.T) {
 		t.Errorf("Unexpected quantity of items. Expected: %v, got: %v", 1, len(batches))
 	}
 
-	batch, _ := testCase.Container.Batches.Get(3)
-	batch.SKU = "lamp"
-	testCase.Container.Batches.Update(batch)
+	for _, batch := range batchFixtures {
+		batch.SKU = "lamp"
+		testCase.Container.Batches.Update(batch)
+	}
 
 	batches, err = testCase.Container.Batches.FliterBySKU("lamp")
 	if err != nil {
 		t.Error(err)
 	}
-	if len(batches) != 2 {
+	if len(batches) != len(batchFixtures) {
 		t.Errorf("Unexpected quantity of items. Expected: %v, got: %v", 1, len(batches))
 	}
 }
 
 func TestBatchRepositoryCanUpdateBatch(t *testing.T) {
 
-	testCase := tests.NewTestCase()
-	testCase.CreateBatches()
-	testCase.CreateOrderLines()
+	testCase := tests.NewIntegrityTestCase()
+	batchFixtures := testCase.CreateBatches()
+	testCase.CreateOrderLines(batchFixtures)
 	t.Cleanup(testCase.Delete)
 
-	reference := "Test-batch-created"
-	sku := "tested-good"
-	eta := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
-	purchasedAuantity := 15
-
-	batch := batches.NewBatch(reference, sku, eta, purchasedAuantity)
-
-	batch.ID = 1
+	batch := batchFixtures[0]
+	batch.Reference = "Test-batch-created"
+	batch.SKU = "tested-good"
+	batch.ETA = time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 
 	err := testCase.Container.Batches.Update(batch)
 	if err != nil {
@@ -110,7 +109,7 @@ func TestBatchRepositoryCanUpdateBatch(t *testing.T) {
 		return
 	}
 
-	expected := expectedType{reference: reference, sku: sku, eta: eta, availableQuantity: purchasedAuantity}
+	expected := expectedType{reference: batch.Reference, sku: batch.SKU, eta: batch.ETA, availableQuantity: batch.AvailableQuantity()}
 
 	assertBatch(updatedBatch, expected, t)
 

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func makeBatchAndLine(sku string, batchQuantity, lineQuantity int) (*Batch, OrderLine) {
+func makeBatchAndLine(sku string, batchQuantity, lineQuantity int) (*Batch, *OrderLine) {
 	batch := NewBatch("batch-001", sku, time.Now(), batchQuantity)
 	line := NewOrderLine("order-123", sku, lineQuantity, 0)
 

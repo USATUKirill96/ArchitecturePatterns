@@ -6,7 +6,7 @@ import (
 	"USATUKirill96/AcrhitecturePatterns/pkg/batches"
 )
 
-func Allocate(orderline batches.OrderLine, batches []*batches.Batch) (*batches.Batch, error) {
+func Allocate(orderline *batches.OrderLine, batches []*batches.Batch) (*batches.Batch, error) {
 	for _, batch := range batches {
 		if batch.CanAllocate(orderline) {
 			batch.Allocate(orderline)

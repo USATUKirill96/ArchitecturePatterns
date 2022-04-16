@@ -94,7 +94,7 @@ func (r *BatchRepository) LoadAllocations(batch *Batch) error {
 		if err != nil {
 			return err
 		}
-		orderLines = append(orderLines, *ol)
+		orderLines = append(orderLines, ol)
 	}
 
 	if err = rows.Err(); err != nil {
